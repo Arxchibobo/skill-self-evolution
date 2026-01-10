@@ -1,0 +1,49 @@
+{
+  "generated_at": "2026-01-10T02:00:00.000Z",
+  "version": "1.0.3",
+  "weights": {
+    "style:minimalism": 0.923,
+    "style:glassmorphism": 0.887,
+    "style:brutalism": 0.845,
+    "style:claymorphism": 0.812,
+    "style:neumorphism": 0.756,
+    "color:saas-blue": 0.901,
+    "color:professional-gray": 0.878,
+    "color:trust-green": 0.834,
+    "color:energy-orange": 0.789,
+    "color:luxury-gold": 0.723,
+    "typography:inter": 0.912,
+    "typography:roboto": 0.889,
+    "typography:source-serif": 0.867,
+    "typography:playfair": 0.834,
+    "product:saas": 0.945,
+    "product:ecommerce": 0.923,
+    "product:portfolio": 0.901,
+    "product:blog": 0.878,
+    "stack:html-tailwind": 0.967,
+    "stack:react": 0.923,
+    "stack:nextjs": 0.912,
+    "stack:vue": 0.889
+  },
+  "changes_since_last_update": {
+    "style:minimalism": 0.015,
+    "color:saas-blue": 0.012,
+    "typography:inter": 0.009,
+    "product:saas": 0.007,
+    "style:brutalism": -0.008,
+    "color:luxury-gold": -0.011
+  },
+  "optimization_metadata": {
+    "total_executions_analyzed": 195,
+    "time_decay_applied": true,
+    "smoothing_factor": 0.3,
+    "quality_threshold": 0.85,
+    "last_ab_test": "2026-01-08",
+    "ab_test_result": {
+      "winner": "version_b",
+      "improvement": 0.08,
+      "p_value": 0.023,
+      "confidence": 0.95
+    }
+  }
+}

@@ -1,0 +1,255 @@
+# Self-Evolution Skill 配置文件
+#
+# 此文件允许用户自定义 Self-Evolution 的行为
+# 修改后需要重启 Claude Code 以使配置生效
+
+# ============================================================
+# 数据收集配置
+# ============================================================
+data_collection:
+  # 是否启用数据收集
+  enabled: true
+
+  # 数据存储路径（相对于 skill 目录）
+  storage_path: "data"
+
+  # 数据保留天数（超过此天数的数据将被清理）
+  retention_days: 90
+
+  # 是否匿名化敏感信息（API keys, tokens, etc.）
+  anonymize: true
+
+  # 采样率（1.0 = 收集所有数据，0.5 = 收集 50%）
+  sampling_rate: 1.0
+
+  # 排除的数据类型（不会被记录）
+  excluded_data:
+    - "user_credentials"
+    - "api_keys"
+    - "personal_information"
+    - "proprietary_code"
+
+
+# ============================================================
+# 质量评估配置
+# ============================================================
+quality_evaluator:
+  # 是否启用质量评估
+  enabled: true
+
+  # 质量阈值（低于此阈值将触发告警）
+  thresholds:
+    completeness: 0.8      # 完整性阈值
+    consistency: 0.7       # 一致性阈值
+    professionalism: 0.75  # 专业性阈值
+    performance: 0.7       # 性能阈值
+    maintainability: 0.75  # 可维护性阈值
+
+  # 评分权重（用于计算综合分数）
+  weights:
+    completeness: 0.25
+    consistency: 0.20
+    professionalism: 0.25
+    performance: 0.15
+    maintainability: 0.15
+
+  # 是否在质量低于阈值时发送通知
+  notify_on_low_quality: true
+
+
+# ============================================================
+# 反馈学习配置
+# ============================================================
+feedback_learner:
+  # 是否启用反馈学习
+  enabled: true
+
+  # 用户修改的最小阈值（修改比例低于此值将被忽略）
+  min_modification_threshold: 0.02  # 2%
+
+  # 用户修改的最大阈值（修改比例高于此值视为完全重写）
+  max_modification_threshold: 0.80  # 80%
+
+  # 学习速率（控制反馈对模型的影响程度）
+  learning_rate: 0.1
+
+  # 是否启用显式反馈（用户评分）
+  explicit_feedback_enabled: false
+
+
+# ============================================================
+# 模式发现配置
+# ============================================================
+pattern_discoverer:
+  # 是否启用模式发现
+  enabled: true
+
+  # Apriori 算法参数
+  apriori:
+    min_support: 0.05      # 最小支持度（5%）
+    min_confidence: 0.6    # 最小置信度（60%）
+    max_itemset_size: 5    # 最大项集大小
+
+  # 序列模式参数
+  sequence:
+    min_occurrence: 3      # 最小出现次数
+    max_sequence_length: 8 # 最大序列长度
+
+  # 成功模式阈值
+  success_threshold: 0.85  # 质量分数高于此值视为成功
+
+  # 模式发现频率
+  discovery_frequency: "daily"  # daily, weekly, manual
+
+
+# ============================================================
+# 权重优化配置
+# ============================================================
+weight_optimizer:
+  # 是否启用权重优化
+  enabled: true
+
+  # 更新频率
+  update_frequency: "daily"  # daily, weekly, manual
+
+  # 平滑因子（控制权重变化的平滑程度）
+  smoothing_factor: 0.3  # 0 = 无平滑，1 = 完全平滑
+
+  # 时间衰减
+  time_decay:
+    enabled: true
+    half_life_days: 60  # 半衰期（60 天后权重减半）
+
+  # 权重边界
+  weight_bounds:
+    min: 0.1   # 最小权重
+    max: 10.0  # 最大权重
+
+  # 是否自动应用权重更新
+  auto_apply: true
+
+
+# ============================================================
+# 框架进化配置
+# ============================================================
+framework_evolver:
+  # 是否启用框架进化
+  enabled: true
+
+  # A/B 测试配置
+  ab_testing:
+    enabled: true
+    traffic_split: 0.2     # 新版本流量比例（20%）
+    min_sample_size: 100   # 最小样本量
+    significance_level: 0.05  # 显著性水平（p < 0.05）
+
+  # 自动应用阈值（质量提升超过此值时自动应用）
+  auto_apply_threshold: 0.10  # 10% 提升
+
+  # 回滚阈值（质量下降超过此值时自动回滚）
+  rollback_threshold: 0.05  # 5% 下降
+
+
+# ============================================================
+# 知识迁移配置
+# ============================================================
+knowledge_transferer:
+  # 是否启用知识迁移
+  enabled: true
+
+  # 相似度阈值（高于此值认为领域相似）
+  similarity_threshold: 0.6
+
+  # 迁移策略
+  transfer_strategy: "conservative"  # conservative, moderate, aggressive
+
+  # 适配因子（控制迁移知识的适配程度）
+  adaptation_factor: 0.5
+
+
+# ============================================================
+# 报告配置
+# ============================================================
+reporting:
+  # 是否启用仪表板
+  dashboard_enabled: true
+
+  # 仪表板更新频率
+  update_frequency: "weekly"  # daily, weekly, monthly
+
+  # 报告格式
+  formats:
+    - "markdown"
+    - "json"
+    # - "html"  # 可选
+
+  # 是否发送通知
+  notifications:
+    enabled: false
+    channels:
+      # - "slack"
+      # - "email"
+    slack:
+      webhook_url: ""
+      channel: "#self-evolution"
+    email:
+      smtp_server: ""
+      from_address: ""
+      to_addresses: []
+
+
+# ============================================================
+# 性能配置
+# ============================================================
+performance:
+  # 是否启用异步处理
+  async_processing: true
+
+  # 是否启用批量更新
+  batch_updates: true
+
+  # 批量大小
+  batch_size: 50
+
+  # 最大内存使用（MB）
+  max_memory_mb: 50
+
+  # 最大 CPU 使用率（%）
+  max_cpu_percent: 5
+
+  # 是否启用缓存
+  cache_enabled: true
+
+  # 缓存大小（条目数）
+  cache_size: 1000
+
+
+# ============================================================
+# 调试配置
+# ============================================================
+debug:
+  # 是否启用调试模式
+  enabled: false
+
+  # 日志级别（debug, info, warning, error）
+  log_level: "info"
+
+  # 日志文件路径
+  log_file: "logs/self-evolution.log"
+
+  # 是否保存中间结果
+  save_intermediate_results: false
+
+
+# ============================================================
+# 实验性功能
+# ============================================================
+experimental:
+  # 是否启用实验性功能
+  enabled: false
+
+  # 实验性功能列表
+  features:
+    - "neural_pattern_discovery"  # 神经网络模式发现
+    - "meta_learning"             # 元学习
+    - "cross_skill_optimization"  # 跨 skill 优化

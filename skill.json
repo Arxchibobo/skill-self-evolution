@@ -1,0 +1,243 @@
+{
+  "name": "self-evolution",
+  "version": "1.0.0",
+  "description": "元级技能系统，监控、分析和优化所有其他技能的表现，实现自我进化和持续改进",
+  "author": "Claude Code",
+  "type": "meta-skill",
+  "auto_activate": true,
+  "priority": 1,
+
+  "capabilities": [
+    "quality-evaluation",
+    "feedback-learning",
+    "pattern-discovery",
+    "weight-optimization",
+    "framework-evolution",
+    "knowledge-transfer"
+  ],
+
+  "activation_triggers": {
+    "post_skill_execution": true,
+    "session_end": true,
+    "on_user_modification": true,
+    "scheduled": {
+      "daily": "02:00",
+      "weekly": "Sunday 03:00"
+    }
+  },
+
+  "modules": [
+    {
+      "name": "quality-evaluator",
+      "enabled": true,
+      "description": "评估生成内容的质量",
+      "metrics": [
+        "completeness",
+        "consistency",
+        "professionalism",
+        "performance",
+        "maintainability"
+      ],
+      "thresholds": {
+        "completeness": 0.8,
+        "consistency": 0.7,
+        "professionalism": 0.75,
+        "performance": 0.6,
+        "maintainability": 0.7
+      }
+    },
+    {
+      "name": "feedback-learner",
+      "enabled": true,
+      "description": "从用户修改中学习改进点",
+      "tracking": {
+        "modifications": true,
+        "ratings": true,
+        "comments": true
+      },
+      "learning_rate": 0.3,
+      "min_confidence": 0.7
+    },
+    {
+      "name": "pattern-discoverer",
+      "enabled": true,
+      "description": "识别高频组合和成功模式",
+      "algorithms": ["apriori", "fp-growth"],
+      "min_support": 0.3,
+      "min_confidence": 0.6,
+      "pattern_types": [
+        "element_combinations",
+        "search_sequences",
+        "success_patterns"
+      ]
+    },
+    {
+      "name": "weight-optimizer",
+      "enabled": true,
+      "description": "自动调整元素权重",
+      "update_frequency": "daily",
+      "smoothing_factor": 0.3,
+      "time_decay": {
+        "enabled": true,
+        "half_life_days": 60
+      }
+    },
+    {
+      "name": "framework-evolver",
+      "enabled": true,
+      "description": "优化框架规则和配置",
+      "ab_testing": true,
+      "auto_apply_threshold": 0.95,
+      "manual_review_threshold": 0.7
+    },
+    {
+      "name": "knowledge-transferer",
+      "enabled": true,
+      "description": "跨领域知识迁移",
+      "cross_domain": true,
+      "cross_stack": true,
+      "similarity_threshold": 0.6
+    }
+  ],
+
+  "data_collection": {
+    "enabled": true,
+    "storage_path": ".claude/skills/self-evolution/data",
+    "retention_days": 90,
+    "anonymize": true,
+    "collected_data": [
+      "skill_name",
+      "trigger_context",
+      "execution_metrics",
+      "output_characteristics",
+      "user_feedback",
+      "modifications"
+    ],
+    "excluded_data": [
+      "user_credentials",
+      "api_keys",
+      "personal_information",
+      "proprietary_code"
+    ]
+  },
+
+  "reporting": {
+    "dashboard": {
+      "enabled": true,
+      "path": ".claude/skills/self-evolution/dashboard.md",
+      "update_frequency": "daily"
+    },
+    "exports": {
+      "enabled": true,
+      "formats": ["json", "csv", "markdown"],
+      "path": ".claude/skills/self-evolution/reports/exports"
+    },
+    "notifications": {
+      "quality_drop": true,
+      "pattern_discovered": true,
+      "optimization_applied": true
+    }
+  },
+
+  "hooks": [
+    {
+      "type": "PostToolUse",
+      "tool": "Skill",
+      "script": "./hooks/record-execution.js",
+      "description": "记录 skill 执行数据"
+    },
+    {
+      "type": "SessionEnd",
+      "script": "./hooks/collect-feedback.js",
+      "description": "收集会话反馈"
+    },
+    {
+      "type": "OnFileEdit",
+      "script": "./hooks/detect-modifications.js",
+      "description": "检测用户修改"
+    }
+  ],
+
+  "commands": [
+    {
+      "name": "quality-report",
+      "description": "查看质量评估报告",
+      "usage": "/self-evolution:quality-report [--period <daily|weekly|monthly>]"
+    },
+    {
+      "name": "patterns",
+      "description": "查看发现的模式",
+      "usage": "/self-evolution:patterns [--type <combinations|sequences|success>]"
+    },
+    {
+      "name": "weights",
+      "description": "查看权重变化",
+      "usage": "/self-evolution:weights [--skill <skill-name>]"
+    },
+    {
+      "name": "optimize",
+      "description": "触发手动优化",
+      "usage": "/self-evolution:optimize [--module <module-name>]"
+    },
+    {
+      "name": "export",
+      "description": "导出进化数据",
+      "usage": "/self-evolution:export [--format <json|csv|markdown>] [--period <range>]"
+    },
+    {
+      "name": "dashboard",
+      "description": "打开进化仪表板",
+      "usage": "/self-evolution:dashboard"
+    },
+    {
+      "name": "config",
+      "description": "查看或修改配置",
+      "usage": "/self-evolution:config [--set <key=value>]"
+    }
+  ],
+
+  "dependencies": {
+    "python": ">=3.8",
+    "packages": [
+      "numpy",
+      "pandas",
+      "scikit-learn",
+      "scipy"
+    ]
+  },
+
+  "integration": {
+    "monitored_skills": [
+      "ui-ux-pro-max",
+      "browser-use",
+      "frontend-design",
+      "code-review",
+      "commit-commands"
+    ],
+    "data_sources": [
+      "skill_executions",
+      "user_modifications",
+      "git_history",
+      "quality_metrics"
+    ]
+  },
+
+  "privacy": {
+    "local_only": true,
+    "no_external_upload": true,
+    "anonymization": true,
+    "user_control": {
+      "opt_out": true,
+      "data_deletion": true,
+      "data_export": true
+    }
+  },
+
+  "performance": {
+    "async_processing": true,
+    "batch_updates": true,
+    "background_optimization": true,
+    "max_memory_mb": 100,
+    "max_cpu_percent": 10
+  }
+}

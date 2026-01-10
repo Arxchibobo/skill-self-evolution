@@ -1,0 +1,69 @@
+{
+  "generated_at": "2026-01-10T02:00:00.000Z",
+  "period": {
+    "start_date": "2025-12-10",
+    "end_date": "2026-01-10",
+    "days": 30
+  },
+  "frequent_combinations": [
+    {
+      "items": ["minimalism", "glassmorphism", "saas-blue"],
+      "support": 0.23,
+      "occurrence_count": 45,
+      "avg_quality_score": 0.89,
+      "confidence": 0.85
+    },
+    {
+      "items": ["brutalism", "dark-mode", "neon-colors"],
+      "support": 0.18,
+      "occurrence_count": 35,
+      "avg_quality_score": 0.87,
+      "confidence": 0.82
+    },
+    {
+      "items": ["claymorphism", "pastel-colors", "playful-fonts"],
+      "support": 0.15,
+      "occurrence_count": 29,
+      "avg_quality_score": 0.84,
+      "confidence": 0.78
+    }
+  ],
+  "success_patterns": [
+    {
+      "pattern_type": "search_sequence",
+      "sequence": ["product", "style", "color", "typography", "ux"],
+      "success_rate": 0.92,
+      "avg_quality_score": 0.91,
+      "sample_size": 67
+    },
+    {
+      "pattern_type": "element_combination",
+      "elements": {
+        "style": "minimalism",
+        "color": "saas-blue",
+        "typography": "inter-roboto"
+      },
+      "success_rate": 0.89,
+      "avg_quality_score": 0.88,
+      "sample_size": 42
+    }
+  ],
+  "failure_patterns": [
+    {
+      "pattern_type": "anti_pattern",
+      "elements": ["too_many_colors", "inconsistent_spacing"],
+      "failure_rate": 0.78,
+      "avg_quality_score": 0.45,
+      "sample_size": 12
+    }
+  ],
+  "cross_domain_transfers": [
+    {
+      "source_domain": "saas",
+      "target_domain": "ecommerce",
+      "transferred_patterns": ["minimalism", "trust-building-elements"],
+      "success_rate": 0.82,
+      "sample_size": 15
+    }
+  ]
+}

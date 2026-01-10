@@ -1,0 +1,42 @@
+{
+  "session_id": "20260110_a3f2b1c4",
+  "timestamp": "2026-01-10T08:45:22.567Z",
+  "overall_satisfaction": 85,
+  "modification_patterns": {
+    "minor_tweaks": 2,
+    "moderate_changes": 0,
+    "significant_rewrite": 0
+  },
+  "skill_feedback": {
+    "ui-ux-pro-max": {
+      "total_files": 1,
+      "total_changes": 12,
+      "avg_change_percentage": 4.2,
+      "categories": {
+        "minor_tweaks": 1,
+        "content_modification": 1
+      }
+    }
+  },
+  "user_modifications": [
+    {
+      "file": "pricing-page.html",
+      "changes": {
+        "lines_added": 5,
+        "lines_removed": 3,
+        "lines_modified": 7,
+        "percentage_changed": 4.2
+      },
+      "inferred_reasons": [
+        "color_adjustment",
+        "spacing_refinement"
+      ]
+    }
+  ],
+  "implicit_feedback": {
+    "style_satisfaction": "high",
+    "structure_satisfaction": "high",
+    "color_satisfaction": "medium",
+    "notes": "用户调整了主色调和部分间距"
+  }
+}
