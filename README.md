@@ -197,11 +197,96 @@ python scripts/pattern_discovery.py --days 30 --min-support 0.1
 python scripts/knowledge_transfer.py --days 90 --similarity 0.6
 ```
 
-### ⏳ Phase 4: 高级功能（计划中）
+### ✅ Phase 4: 高级功能（已完成）
 
-- 框架进化器 (Framework Evolver) - 自动优化 Skill 配置
-- 实时仪表板 (Dashboard) - 可视化分析界面
-- 自动模板生成 (Template Generator) - 基于模式自动生成模板
+**状态**: 生产就绪
+
+**包含组件**:
+
+#### 1. 框架进化器 (`framework_evolver.py`)
+- **配置优化**: 基于性能数据自动调整配置参数
+- **规则进化**: 发现并更新搜索规则
+- **阈值自动调整**: 根据质量趋势优化阈值
+- **搜索域优先级**: 优化搜索顺序
+
+**使用**:
+```bash
+python scripts/framework_evolver.py  # 生成建议
+python scripts/framework_evolver.py --apply  # 自动应用（实验性）
+```
+
+#### 2. 模板生成器 (`template_generator.py`)
+- **模板提取**: 从成功案例中提取通用结构
+- **占位符生成**: 自动识别可变部分
+- **模板分类**: 按产品类型、样式等分类
+- **模板验证**: 确保生成的模板有效且完整
+
+**使用**:
+```bash
+python scripts/template_generator.py --min-quality 0.75
+```
+
+#### 3. 自动化调度器 (`scheduler.py`)
+- **任务调度**: 支持 daily、weekly、monthly 周期
+- **依赖管理**: 自动处理任务间依赖关系
+- **后台运行**: Daemon 模式持续运行
+- **任务日志**: 记录所有执行历史
+
+**使用**:
+```bash
+python scripts/scheduler.py --list           # 列出所有任务
+python scripts/scheduler.py                  # 运行一次
+python scripts/scheduler.py --daemon         # Daemon 模式
+python scripts/scheduler.py --task optimize  # 运行特定任务
+```
+
+#### 4. 可视化仪表板 (`dashboard.html`)
+- **实时统计**: 执行次数、质量分数、模式数等
+- **趋势图表**: 30 天质量趋势可视化
+- **最近记录**: 显示最近执行和模式发现
+- **模板库**: 浏览可用模板
+
+**使用**:
+```bash
+# 方法 1: 使用 CLI 工具
+python cli.py dashboard
+
+# 方法 2: 直接打开
+# 在浏览器中打开 dashboard.html
+```
+
+#### 5. 统一命令行工具 (`cli.py`)
+提供统一的命令行接口执行所有操作：
+
+```bash
+# 查看帮助
+python cli.py --help
+
+# 运行分析
+python cli.py analyze --window 30
+
+# 优化权重
+python cli.py optimize --window 7
+
+# 生成模板
+python cli.py template --min-quality 0.75
+
+# 框架进化
+python cli.py evolve
+
+# 管理调度器
+python cli.py schedule --list
+python cli.py schedule --daemon
+
+# 查看状态
+python cli.py status
+
+# 打开仪表板
+python cli.py dashboard
+
+# 清理数据
+python cli.py cleanup --days 90
+```
 
 ---
 
@@ -930,6 +1015,59 @@ Skill 执行
 - ✅ 不上传到外部服务
 - ✅ 权限限制在 skill 范围内
 - ✅ 完全透明和可审计
+
+---
+
+## 🧪 测试
+
+### 运行测试
+
+```bash
+# 运行所有测试
+python run_tests.py
+
+# 详细输出
+python run_tests.py --verbose
+```
+
+### 测试覆盖
+
+- ✅ `test_weight_optimizer.py` - 权重优化算法测试
+  - 时间衰减计算
+  - 权重计算逻辑
+  - 平滑因子效果
+
+- ✅ `test_ab_testing.py` - A/B 测试统计验证
+  - 均值和方差计算
+  - t-test 显著性检验
+  - Cohen's d 效应量
+  - 完整分析流程
+
+### 添加新测试
+
+在 `tests/` 目录下创建 `test_<module>.py` 文件：
+
+```python
+import unittest
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent / 'scripts'))
+
+from <module> import <ClassName>
+
+class Test<ClassName>(unittest.TestCase):
+    def setUp(self):
+        # 测试准备
+        pass
+
+    def test_<feature>(self):
+        # 测试逻辑
+        pass
+
+if __name__ == '__main__':
+    unittest.main()
+```
 
 ---
 
