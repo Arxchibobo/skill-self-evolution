@@ -24,6 +24,12 @@ from pathlib import Path
 from typing import Dict, List, Any, Tuple, Optional
 import math
 
+try:
+    from scipy import stats as scipy_stats
+    HAS_SCIPY = True
+except ImportError:
+    HAS_SCIPY = False
+
 # 添加父目录到路径
 SCRIPT_DIR = Path(__file__).parent
 PROJECT_ROOT = SCRIPT_DIR.parent
@@ -98,14 +104,15 @@ class ABTesting:
         df = ((var_a / n_a + var_b / n_b) ** 2) / \
              ((var_a / n_a) ** 2 / (n_a - 1) + (var_b / n_b) ** 2 / (n_b - 1))
 
-        # 近似 p 值计算（简化版，使用正态分布近似）
-        # 对于大样本（df > 30），t 分布接近正态分布
-        if df > 30:
-            # 使用标准正态分布近似
+        # p 值计算
+        if HAS_SCIPY:
+            # 使用 scipy 精确计算（单尾检验）
+            p_value = 1 - scipy_stats.t.cdf(t_stat, df)
+        elif df > 30:
+            # 大样本：使用标准正态分布近似
             # P(Z > t) ≈ 1 - Φ(t)
             # 近似公式：Φ(x) ≈ 0.5 * (1 + erf(x/sqrt(2)))
             # erf(x) ≈ sign(x) * sqrt(1 - exp(-x²*(4/π + 0.147*x²)/(1 + 0.147*x²)))
-
             x = t_stat / math.sqrt(2)
             a = 0.147
             erf_approx = (1 if x >= 0 else -1) * math.sqrt(
@@ -113,8 +120,22 @@ class ABTesting:
             )
             p_value = 0.5 * (1 - erf_approx)
         else:
-            # 对于小样本，使用保守估计
-            p_value = 0.1 if t_stat > 1.5 else 0.3
+            # 小样本：使用改进的近似
+            # 基于 t 统计量的分段估计
+            if abs(t_stat) > 5:
+                p_value = 0.001
+            elif abs(t_stat) > 4:
+                p_value = 0.005
+            elif abs(t_stat) > 3:
+                p_value = 0.01
+            elif abs(t_stat) > 2.5:
+                p_value = 0.02
+            elif abs(t_stat) > 2:
+                p_value = 0.05
+            elif abs(t_stat) > 1.5:
+                p_value = 0.1
+            else:
+                p_value = 0.2
 
         # 判断是否显著（单尾检验）
         is_significant = (t_stat > 0) and (p_value < self.alpha)

@@ -1043,6 +1043,33 @@ python run_tests.py --verbose
   - Cohen's d 效应量
   - 完整分析流程
 
+### 最近修复 (2026-01-11)
+
+**修复的 Bug**:
+
+1. **weight_optimizer.py** - 字段名不匹配
+   - 问题: 代码期望 `days_ago` 和 `quality` 字段，但测试提供 `timestamp` 和 `quality_score`
+   - 修复: 添加兼容逻辑，自动从 `timestamp` 计算 `days_ago`，支持两种字段名
+
+2. **ab_testing.py** - 小样本 p-value 不准确
+   - 问题: 小样本 t-test 的 p-value 过于保守（固定为 0.1 或 0.3）
+   - 修复: 集成 scipy.stats.t.cdf() 精确计算，无 scipy 时使用改进的分段近似
+
+3. **run_tests.py** - Windows GBK 编码错误
+   - 问题: Windows 命令行无法显示 Unicode emoji (✅ ❌)
+   - 修复: 使用 ASCII 文本 `[SUCCESS]` 和 `[FAILED]` 替代
+
+**测试结果**: 所有 8 个测试通过 ✅
+
+```bash
+# 验证修复
+python run_tests.py
+# Tests run: 8
+# Successes: 8
+# Failures: 0
+# Errors: 0
+```
+
 ### 添加新测试
 
 在 `tests/` 目录下创建 `test_<module>.py` 文件：

@@ -242,8 +242,22 @@ class WeightOptimizer:
             decay_sum = 0
 
             for record in records:
-                decay_factor = self.calculate_time_decay(record['days_ago'])
-                weighted_quality_sum += record['quality'] * decay_factor
+                # Calculate days_ago from timestamp if not provided
+                if 'days_ago' in record:
+                    days_ago = record['days_ago']
+                elif 'timestamp' in record:
+                    from datetime import datetime
+                    timestamp = datetime.fromisoformat(record['timestamp'])
+                    days_ago = (datetime.now() - timestamp).days
+                else:
+                    days_ago = 0  # Assume recent if no time info
+
+                decay_factor = self.calculate_time_decay(days_ago)
+
+                # Handle both 'quality' and 'quality_score' field names
+                quality = record.get('quality', record.get('quality_score', 0.5))
+
+                weighted_quality_sum += quality * decay_factor
                 decay_sum += decay_factor
 
             avg_quality = weighted_quality_sum / decay_sum if decay_sum > 0 else 0

@@ -42,10 +42,10 @@ def run_tests(verbosity=1):
     print(f"Errors: {len(result.errors)}")
 
     if result.wasSuccessful():
-        print("\n✅ All tests passed!")
+        print("\n[SUCCESS] All tests passed!")
         return 0
     else:
-        print("\n❌ Some tests failed")
+        print("\n[FAILED] Some tests failed")
         return 1
 
 
