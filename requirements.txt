@@ -1,6 +1,9 @@
 # Self-Evolution Skill Python Dependencies
 # Install with: pip install -r requirements.txt
 
+# Configuration
+PyYAML>=6.0
+
 # Core scientific computing
 numpy>=1.24.0
 pandas>=2.0.0

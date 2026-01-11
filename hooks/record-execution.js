@@ -12,13 +12,18 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { execFile } = require('child_process');
+const util = require('util');
+
+const execFileAsync = util.promisify(execFile);
 
 // 配置
 const CONFIG = {
   dataDir: path.join(process.env.HOME || process.env.USERPROFILE, '.claude/skills/self-evolution/data'),
   executionsDir: 'executions',
   anonymize: true,
-  verbose: false
+  verbose: false,
+  enableQualityEvaluation: true  // 启用质量评估
 };
 
 /**
@@ -33,10 +38,32 @@ async function recordExecution(context) {
     }
 
     const executionData = collectExecutionData(context);
+
+    // 质量评估（如果启用）
+    if (CONFIG.enableQualityEvaluation) {
+      try {
+        const qualityScores = await evaluateQuality(executionData, context);
+        executionData.quality_scores = qualityScores;
+      } catch (error) {
+        if (CONFIG.verbose) {
+          console.log(`[Self-Evolution] 质量评估失败: ${error.message}`);
+        }
+        // 使用默认分数
+        executionData.quality_scores = {
+          overall: 0.5,
+          dimensions: {},
+          note: 'Quality evaluation failed'
+        };
+      }
+    }
+
     await saveExecutionData(executionData);
 
     if (CONFIG.verbose) {
       console.log(`[Self-Evolution] 已记录执行数据: ${executionData.session_id}`);
+      if (executionData.quality_scores) {
+        console.log(`[Self-Evolution] 质量分数: ${executionData.quality_scores.overall}`);
+      }
     }
 
     return { allow: true };
@@ -45,6 +72,73 @@ async function recordExecution(context) {
     // 不阻止执行，即使记录失败
     return { allow: true };
   }
+}
+
+/**
+ * 评估输出质量
+ * @param {Object} executionData - 执行数据
+ * @param {Object} context - 上下文
+ * @returns {Promise<Object>} 质量分数
+ */
+async function evaluateQuality(executionData, context) {
+  // 构建输入数据
+  const evaluationInput = {
+    output: {
+      files: extractFilesFromContext(context),
+      ...executionData.output
+    },
+    context: {
+      required_elements: executionData.trigger.detected_keywords,
+      skill_name: executionData.skill_name
+    }
+  };
+
+  // 写入临时文件
+  const tempFile = path.join(CONFIG.dataDir, '.temp_eval_input.json');
+  fs.writeFileSync(tempFile, JSON.stringify(evaluationInput, null, 2), 'utf8');
+
+  try {
+    // 调用 Python 质量评估器
+    const scriptPath = path.join(__dirname, '..', 'scripts', 'quality_evaluator.py');
+    const { stdout } = await execFileAsync('python3', [scriptPath, tempFile]);
+
+    const result = JSON.parse(stdout);
+
+    // 清理临时文件
+    fs.unlinkSync(tempFile);
+
+    return result;
+  } catch (error) {
+    // 清理临时文件
+    if (fs.existsSync(tempFile)) {
+      fs.unlinkSync(tempFile);
+    }
+    throw error;
+  }
+}
+
+/**
+ * 从上下文提取生成的文件
+ */
+function extractFilesFromContext(context) {
+  const files = {};
+
+  // 从工具调用中提取 Write 操作
+  if (context.toolCalls) {
+    context.toolCalls.forEach(call => {
+      if (call.tool === 'Write' && call.parameters) {
+        const filename = path.basename(call.parameters.file_path || 'output.txt');
+        files[filename] = call.parameters.content || '';
+      }
+    });
+  }
+
+  // 如果没有文件，使用结果字符串
+  if (Object.keys(files).length === 0 && context.result) {
+    files['output.txt'] = context.result;
+  }
+
+  return files;
 }
 
 /**
